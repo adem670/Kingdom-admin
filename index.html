@@ -3,434 +3,483 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#082b20">
-
+  <meta name="theme-color" content="#092d24">
   <title>الإدارة الملكية | المملكة</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root {
-      --green: #082b20;
-      --green2: #104735;
-      --gold: #d8b45a;
-      --gold-light: #f3d98d;
-      --white: #fffdf5;
-      --muted: #c4d0c8;
-      --danger: #c94b4b;
+      --green: #092d24;
+      --green2: #164b3a;
+      --gold: #d7b56d;
+      --cream: #f7f2e7;
+      --ink: #18352c;
+      --muted: #6b7c73;
+      --line: #e5dfd1;
+      --red: #a83c3c;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
+      background: #f2efe7;
+      color: var(--ink);
       font-family: Tahoma, Arial, sans-serif;
-      background: var(--green);
-      color: var(--white);
-      min-height: 100vh;
+      line-height: 1.7;
     }
 
-    header {
-      text-align: center;
-      padding: 30px 15px;
-      background: linear-gradient(135deg, #061c15, #14503b);
-      border-bottom: 2px solid var(--gold);
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+
+    .top {
+      background: linear-gradient(135deg, var(--green), var(--green2));
+      color: white;
+      padding: 24px 16px;
+      border-bottom: 4px solid var(--gold);
     }
 
-    .crown {
-      font-size: 38px;
-      margin-bottom: 8px;
+    .top-inner {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
     }
 
-    h1 {
-      margin: 5px 0 10px;
-      color: var(--gold-light);
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .seal {
+      width: 54px;
+      height: 54px;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--gold);
       font-size: 27px;
+      flex-shrink: 0;
     }
 
-    header p {
-      color: var(--muted);
+    h1 { font-size: 27px; margin: 0; }
+    h2 { color: var(--green); margin-top: 0; }
+    h3 { color: var(--green); }
+
+    .subtitle {
+      color: #e8ddc2;
+      font-size: 14px;
       margin: 0;
-      line-height: 1.8;
     }
 
-    main {
-      width: min(100% - 24px, 850px);
-      margin: 25px auto;
+    .wrap {
+      max-width: 1100px;
+      margin: 28px auto;
+      padding: 0 15px 40px;
     }
 
     .card {
-      background: #103b2d;
-      border: 1px solid #47745a;
+      background: white;
+      border: 1px solid var(--line);
       border-radius: 16px;
       padding: 22px;
-      margin-bottom: 22px;
-      box-shadow: 0 8px 25px #00000020;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 24px #18352c0b;
     }
 
-    h2 {
-      color: var(--gold-light);
-      font-size: 21px;
-      margin-top: 0;
-      padding-bottom: 12px;
-      border-bottom: 1px solid #47745a;
+    .login-box {
+      max-width: 480px;
+      margin: 35px auto;
     }
 
-    label {
-      display: block;
-      margin: 15px 0 7px;
-      color: var(--gold-light);
+    .muted {
+      color: var(--muted);
       font-size: 14px;
     }
 
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #60836d;
-      border-radius: 9px;
-      background: #082b20;
-      color: white;
-      font-family: inherit;
-      font-size: 15px;
-      outline: none;
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
     }
 
-    input:focus,
-    select:focus,
-    textarea:focus {
+    label { font-weight: bold; font-size: 14px; }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #d8d5ca;
+      border-radius: 9px;
+      background: white;
+      color: var(--ink);
+    }
+
+    textarea { min-height: 120px; resize: vertical; }
+
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid #d7b56d55;
       border-color: var(--gold);
     }
 
-    textarea {
-      min-height: 130px;
-      resize: vertical;
-      line-height: 1.9;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
     }
 
-    input::placeholder,
-    textarea::placeholder {
-      color: #9bb0a2;
-    }
+    .full { grid-column: 1 / -1; }
 
-    button {
-      width: 100%;
+    .btn {
       border: 0;
       border-radius: 9px;
-      padding: 13px;
-      margin-top: 16px;
-      background: var(--gold);
-      color: #17271c;
-      font-family: inherit;
-      font-size: 16px;
+      padding: 10px 16px;
       font-weight: bold;
-      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
     }
 
-    button:disabled {
-      opacity: .6;
-      cursor: wait;
+    .primary { background: var(--green); color: white; }
+    .primary:hover { background: var(--green2); }
+    .gold { background: var(--gold); color: #1b3028; }
+    .secondary { background: #edf1ed; color: var(--green); }
+    .danger { background: #f9e8e6; color: #8b2525; }
+
+    .btn:disabled { opacity: .55; cursor: not-allowed; }
+
+    .actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      align-items: center;
     }
 
-    button.secondary {
-      background: #285743;
-      color: white;
-      border: 1px solid #638b70;
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
-    button.delete {
-      background: var(--danger);
-      color: white;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .message {
+    .notice {
+      padding: 11px 13px;
+      border-radius: 9px;
+      margin: 12px 0;
       display: none;
-      padding: 12px;
-      margin-top: 15px;
-      border-radius: 8px;
-      line-height: 1.8;
+      font-size: 14px;
       overflow-wrap: anywhere;
     }
 
-    .message.show {
-      display: block;
+    .notice.show { display: block; }
+    .notice.error { background: #fbe8e6; color: #8b2525; }
+    .notice.success { background: #e7f4e9; color: #205e32; }
+    .notice.info { background: #e9f0f6; color: #214c6c; }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 12px 0;
     }
 
-    .message.success {
-      background: #174d36;
-      border: 1px solid #55bd81;
-    }
+    .toolbar input { flex: 1; min-width: 200px; }
+    .toolbar select { max-width: 230px; }
 
-    .message.error {
-      background: #542626;
-      border: 1px solid #dc7777;
-    }
+    .list { display: grid; gap: 12px; }
 
-    .status {
-      display: inline-block;
-      padding: 5px 10px;
-      border-radius: 20px;
-      background: #285743;
-      color: var(--gold-light);
-      font-size: 12px;
-      margin-bottom: 10px;
-    }
-
-    .publication {
-      border: 1px solid #47745a;
+    .item {
+      border: 1px solid var(--line);
       border-radius: 12px;
-      padding: 16px;
-      margin: 14px 0;
-      background: #0a3023;
+      padding: 15px;
+      background: #fffdf8;
+    }
+
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .item h3 { font-size: 17px; margin: 0 0 5px; }
+
+    .meta {
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .bodytext {
+      white-space: pre-wrap;
       overflow-wrap: anywhere;
+      margin: 12px 0;
     }
 
-    .publication h3 {
-      color: var(--gold-light);
-      line-height: 1.8;
-      margin: 5px 0 10px;
+    .badge {
+      display: inline-block;
+      border-radius: 99px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: bold;
+      background: #efe8d8;
+      color: #5d4820;
     }
 
-    .publication p {
-      line-height: 1.9;
+    .status-pending { background: #fff0cb; color: #785400; }
+    .status-under_review { background: #e1edfa; color: #24547b; }
+    .status-approved { background: #dff3e3; color: #206536; }
+    .status-rejected { background: #f9e1df; color: #8b2525; }
+
+    .request-details {
+      background: #f4f1e8;
+      border-radius: 9px;
+      padding: 12px;
+      margin: 10px 0;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
 
-    .publication a {
-      color: var(--gold-light);
-    }
-
-    .meta {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 2;
-    }
-
     .empty {
-      color: var(--muted);
+      padding: 24px;
       text-align: center;
-      padding: 20px 5px;
-      line-height: 1.9;
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: 12px;
     }
+
+    .hidden { display: none !important; }
 
     footer {
       text-align: center;
-      padding: 22px 12px;
       color: var(--muted);
-      border-top: 1px solid #47745a;
-      font-size: 13px;
-      line-height: 1.8;
+      font-size: 12px;
+      padding: 20px;
     }
 
-    @media (max-width: 480px) {
-      header {
-        padding: 24px 12px;
-      }
-
-      h1 {
-        font-size: 23px;
-      }
-
-      .card {
-        padding: 16px;
-      }
+    @media (max-width: 650px) {
+      .grid { grid-template-columns: 1fr; }
+      .full { grid-column: auto; }
+      .card { padding: 16px; }
+      .top-inner { align-items: flex-start; }
+      .seal { width: 45px; height: 45px; }
     }
   </style>
 </head>
 
 <body>
 
-<header>
-  <div class="crown">♛</div>
-  <h1>الإدارة الملكية</h1>
-  <p>بوابة إدارة قرارات وخطابات المملكة</p>
-</header>
-
-<main>
-
-  <!-- تسجيل الدخول -->
-  <section class="card" id="loginSection">
-    <h2>تسجيل الدخول</h2>
-
-    <form id="loginForm">
-      <label for="email">البريد الإلكتروني</label>
-      <input
-        id="email"
-        type="email"
-        autocomplete="username"
-        placeholder="أدخل بريدك الإلكتروني"
-        required
-      >
-
-      <label for="password">كلمة المرور</label>
-      <input
-        id="password"
-        type="password"
-        autocomplete="current-password"
-        placeholder="أدخل كلمة المرور"
-        required
-      >
-
-      <button id="loginButton" type="submit">
-        دخول إلى الإدارة
-      </button>
-    </form>
-
-    <div id="loginMessage" class="message" role="status"></div>
-  </section>
-
-  <!-- لوحة الإدارة -->
-  <section id="dashboard" class="hidden">
-
-    <div class="card">
-      <h2>مرحبًا بك في الإدارة الملكية</h2>
-      <p>من هنا يمكنك إضافة المنشورات وإدارة الأرشيف.</p>
-
-      <button id="refreshButton" class="secondary" type="button">
-        تحديث الأرشيف
-      </button>
-
-      <button id="logoutButton" class="secondary" type="button">
-        تسجيل الخروج
-      </button>
-
-      <div id="dashboardMessage" class="message" role="status"></div>
-    </div>
-
-    <!-- إضافة منشور -->
-    <div class="card">
-      <h2>إضافة قرار أو خطاب جديد</h2>
-
-      <form id="publicationForm">
-
-        <label for="title">عنوان المنشور *</label>
-        <input
-          id="title"
-          type="text"
-          maxlength="250"
-          placeholder="اكتب عنوان القرار أو الخطاب"
-          required
-        >
-
-        <label for="publicationType">نوع المنشور *</label>
-        <select id="publicationType" required>
-          <option value="decision">قرار ملكي</option>
-          <option value="speech">خطاب ملكي</option>
-        </select>
-
-        <label for="referenceNumber">الرقم المرجعي</label>
-        <input
-          id="referenceNumber"
-          type="text"
-          maxlength="100"
-          placeholder="مثال: 001/2026"
-        >
-
-        <label for="summary">ملخص المنشور</label>
-        <textarea
-          id="summary"
-          maxlength="5000"
-          placeholder="اكتب ملخصًا مختصرًا"
-        ></textarea>
-
-        <label for="content">النص الكامل *</label>
-        <textarea
-          id="content"
-          placeholder="اكتب نص القرار أو الخطاب هنا"
-          required
-        ></textarea>
-
-        <label for="documentUrl">رابط الوثيقة (اختياري)</label>
-        <input
-          id="documentUrl"
-          type="url"
-          placeholder="https://example.com/document.pdf"
-        >
-
-        <label for="imageUrl">رابط الصورة (اختياري)</label>
-        <input
-          id="imageUrl"
-          type="url"
-          placeholder="https://example.com/image.jpg"
-        >
-
-        <label for="publicationStatus">حالة المنشور</label>
-        <select id="publicationStatus">
-          <option value="draft">مسودة — غير منشور</option>
-          <option value="published">نشر على الموقع</option>
-        </select>
-
-        <button id="saveButton" type="submit">
-          حفظ المنشور
-        </button>
-
-      </form>
-
-      <div id="formMessage" class="message" role="status"></div>
-    </div>
-
-    <!-- الأرشيف -->
-    <div class="card">
-      <h2>أرشيف المنشورات</h2>
-      <div id="archive">
-        <p class="empty">جاري تحميل الأرشيف...</p>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="seal">♛</div>
+      <div>
+        <h1>الإدارة الملكية</h1>
+        <p class="subtitle">المملكة — بوابة الإدارة والنشر الرسمي</p>
       </div>
     </div>
 
+    <button id="logoutBtn" class="btn gold hidden" type="button">
+      تسجيل الخروج
+    </button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- تسجيل الدخول -->
+  <section id="loginSection" class="card login-box">
+    <h2>تسجيل دخول المسؤول</h2>
+    <p class="muted">هذه الصفحة مخصّصة للمسؤولين المصرّح لهم فقط.</p>
+
+    <div id="loginNotice" class="notice"></div>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="email">البريد الإلكتروني</label>
+        <input id="email" type="email" autocomplete="username" required>
+      </div>
+
+      <div class="field">
+        <label for="password">كلمة المرور</label>
+        <input id="password" type="password" autocomplete="current-password" required>
+      </div>
+
+      <button id="loginBtn" class="btn primary" type="submit" style="width:100%">
+        دخول إلى لوحة الإدارة
+      </button>
+    </form>
   </section>
 
+  <div id="dashboard" class="hidden">
+
+    <!-- إضافة منشور -->
+    <section class="card">
+      <h2>إضافة منشور رسمي</h2>
+      <p class="muted">أنشئ قرارًا ملكيًا أو خطابًا رسميًا.</p>
+
+      <div id="pubNotice" class="notice"></div>
+
+      <form id="publicationForm">
+        <div class="grid">
+
+          <div class="field">
+            <label for="pubTitle">عنوان المنشور *</label>
+            <input id="pubTitle" required maxlength="250">
+          </div>
+
+          <div class="field">
+            <label for="pubType">نوع المنشور *</label>
+            <select id="pubType" required>
+              <option value="decision">قرار ملكي</option>
+              <option value="speech">خطاب / كلمة</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="pubRef">الرقم المرجعي</label>
+            <input id="pubRef" maxlength="100" placeholder="مثال: 2026/001">
+          </div>
+
+          <div class="field">
+            <label for="pubStatus">حالة النشر</label>
+            <select id="pubStatus">
+              <option value="published">منشور</option>
+              <option value="draft">مسودة</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label for="pubSummary">ملخّص قصير</label>
+            <textarea id="pubSummary" style="min-height:75px"></textarea>
+          </div>
+
+          <div class="field full">
+            <label for="pubContent">النص الكامل *</label>
+            <textarea id="pubContent" required></textarea>
+          </div>
+
+          <div class="field">
+            <label for="pubDoc">رابط الوثيقة</label>
+            <input id="pubDoc" type="url" placeholder="https://...">
+          </div>
+
+          <div class="field">
+            <label for="pubImage">رابط الصورة</label>
+            <input id="pubImage" type="url" placeholder="https://...">
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="savePubBtn" class="btn primary" type="submit">
+            حفظ المنشور
+          </button>
+          <button class="btn secondary" type="reset">تفريغ الحقول</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- الأرشيف -->
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <h2>أرشيف القرارات والخطابات</h2>
+          <p class="muted">المنشورات المسجلة في قاعدة البيانات.</p>
+        </div>
+        <button id="refreshArchiveBtn" class="btn secondary" type="button">
+          تحديث الأرشيف
+        </button>
+      </div>
+
+      <div class="toolbar">
+        <input id="archiveSearch" type="search" placeholder="ابحث بالعنوان أو الرقم المرجعي">
+        <select id="archiveFilter">
+          <option value="all">كل الأنواع</option>
+          <option value="decision">قرارات ملكية</option>
+          <option value="speech">خطابات وكلمات</option>
+        </select>
+      </div>
+
+      <div id="archiveNotice" class="notice"></div>
+      <div id="archiveList" class="list">
+        <div class="empty">جارٍ تحميل الأرشيف...</div>
+      </div>
+    </section>
+
+    <!-- مطالب المواطنين -->
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <h2>مطالب المواطنين</h2>
+          <p class="muted">عرض المطالب الواردة وتغيير حالتها من لوحة الإدارة.</p>
+        </div>
+
+        <button id="refreshApplicationsBtn" class="btn secondary" type="button">
+          تحديث المطالب
+        </button>
+      </div>
+
+      <div class="toolbar">
+        <input id="applicationSearch" type="search"
+          placeholder="ابحث بالاسم أو البريد أو الرقم المرجعي">
+
+        <select id="applicationFilter">
+          <option value="all">كل الحالات</option>
+          <option value="pending">قيد الانتظار</option>
+          <option value="under_review">قيد الدراسة</option>
+          <option value="approved">مقبول</option>
+          <option value="rejected">مرفوض</option>
+        </select>
+      </div>
+
+      <div id="applicationNotice" class="notice"></div>
+
+      <div id="applicationList" class="list">
+        <div class="empty">جارٍ تحميل المطالب...</div>
+      </div>
+    </section>
+
+  </div>
 </main>
 
 <footer>
-  الإدارة الملكية — المملكة
-  <br>
-  جميع الحقوق محفوظة
+  الإدارة الملكية — نظام إدارة المملكة.
 </footer>
 
-<script type="module">
-  import { createClient } from
-    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+<script>
+(() => {
+  "use strict";
 
-  const SUPABASE_URL =
-    "https://gfjlglniyaerdcjgefgi.supabase.co";
+  const SUPABASE_URL = "https://gfjlglniyaerdcjgefgi.supabase.co";
 
+  // استعمل المفتاح Publishable فقط، ولا تضع Service Role Key في الموقع.
   const SUPABASE_KEY =
     "sb_publishable_UTEgMhPFF34jjCIeX39Nhg_8Tf_cWiX";
 
-  const supabase = createClient(
+  const db = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
   );
 
-  const $ = (id) => document.getElementById(id);
+  const $ = id => document.getElementById(id);
 
-  let busy = false;
-
-  function showMessage(id, text, type = "success") {
-    const box = $(id);
-    box.textContent = text;
-    box.className = "message show " + type;
-  }
-
-  function clearMessage(id) {
-    const box = $(id);
-    box.textContent = "";
-    box.className = "message";
-  }
-
-  function setBusy(buttonId, state, text) {
-    $(buttonId).disabled = state;
-    if (text) $(buttonId).textContent = text;
-  }
+  let publications = [];
+  let applications = [];
+  let loginBusy = false;
+  let publicationBusy = false;
 
   function escapeHTML(value) {
-    return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
       "&": "&amp;",
       "<": "&lt;",
       ">": "&gt;",
@@ -439,353 +488,569 @@
     })[char]);
   }
 
-  function safeURL(value) {
-    try {
-      const url = new URL(value);
-      if (url.protocol === "https:" || url.protocol === "http:") {
-        return url.href;
-      }
-    } catch (_) {}
-
-    return "";
+  function notice(id, message, type = "info") {
+    const element = $(id);
+    element.textContent = message;
+    element.className = "notice show " + type;
   }
 
-  function showLogin() {
-    $("loginSection").classList.remove("hidden");
-    $("dashboard").classList.add("hidden");
+  function clearNotice(id) {
+    $(id).textContent = "";
+    $(id).className = "notice";
   }
 
-  function showDashboard() {
-    $("loginSection").classList.add("hidden");
-    $("dashboard").classList.remove("hidden");
+  function formatDate(value) {
+    if (!value) return "—";
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) return "—";
+
+    return date.toLocaleString("ar-TN");
+  }
+
+  function publicationTypeLabel(type) {
+    return type === "decision"
+      ? "قرار ملكي"
+      : type === "speech"
+        ? "خطاب / كلمة"
+        : type || "غير محدد";
+  }
+
+  function statusLabel(status) {
+    const labels = {
+      pending: "قيد الانتظار",
+      under_review: "قيد الدراسة",
+      approved: "مقبول",
+      rejected: "مرفوض",
+      draft: "مسودة",
+      published: "منشور"
+    };
+
+    return labels[status] || status || "غير محدد";
   }
 
   async function verifyAdmin() {
-    const { data: { user }, error: userError } =
-      await supabase.auth.getUser();
+    const { data: sessionData, error: sessionError } =
+      await db.auth.getSession();
 
-    if (userError || !user) {
-      showLogin();
+    if (sessionError || !sessionData.session) {
       return false;
     }
 
-    const { data, error } =
-      await supabase.rpc("is_royal_admin");
+    const { data, error } = await db.rpc("is_royal_admin");
 
-    if (error || data !== true) {
-      await supabase.auth.signOut();
-      showLogin();
+    if (error) {
+      console.error("Admin verification:", error);
+      return false;
+    }
 
-      showMessage(
-        "loginMessage",
-        "هذا الحساب غير مخوّل لدخول الإدارة. تأكد من إعداد صلاحيات المسؤول في Supabase.",
+    return data === true;
+  }
+
+  async function enterDashboard() {
+    const allowed = await verifyAdmin();
+
+    if (!allowed) {
+      await db.auth.signOut();
+
+      $("dashboard").classList.add("hidden");
+      $("loginSection").classList.remove("hidden");
+      $("logoutBtn").classList.add("hidden");
+
+      notice(
+        "loginNotice",
+        "الحساب غير مصرح له بالدخول. تأكد من صلاحيات المسؤول ثم سجّل الدخول من جديد.",
         "error"
       );
 
-      return false;
+      return;
     }
 
-    showDashboard();
-    return true;
+    clearNotice("loginNotice");
+
+    $("loginSection").classList.add("hidden");
+    $("dashboard").classList.remove("hidden");
+    $("logoutBtn").classList.remove("hidden");
+
+    await Promise.all([
+      loadPublications(),
+      loadApplications()
+    ]);
   }
 
-  $("loginForm").addEventListener("submit", async (event) => {
+  // تسجيل الدخول
+  $("loginForm").addEventListener("submit", async event => {
     event.preventDefault();
 
-    clearMessage("loginMessage");
+    if (loginBusy) return;
 
-    if (busy) return;
-    busy = true;
+    loginBusy = true;
+    $("loginBtn").disabled = true;
+    $("loginBtn").textContent = "جارٍ تسجيل الدخول...";
 
-    setBusy("loginButton", true, "جاري تسجيل الدخول...");
+    clearNotice("loginNotice");
 
     try {
       const email = $("email").value.trim();
       const password = $("password").value;
 
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error } = await db.auth.signInWithPassword({
         email,
         password
       });
 
       if (error) throw error;
 
-      const allowed = await verifyAdmin();
-
-      if (allowed) {
-        showMessage(
-          "dashboardMessage",
-          "تم تسجيل الدخول بنجاح."
-        );
-        await loadArchive();
-      }
+      await enterDashboard();
     } catch (error) {
-      showMessage(
-        "loginMessage",
+      notice(
+        "loginNotice",
         "تعذّر تسجيل الدخول: " + (error.message || "خطأ غير معروف"),
         "error"
       );
     } finally {
-      busy = false;
-      setBusy("loginButton", false, "دخول إلى الإدارة");
+      loginBusy = false;
+      $("loginBtn").disabled = false;
+      $("loginBtn").textContent = "دخول إلى لوحة الإدارة";
     }
   });
 
-  async function loadArchive() {
-    $("archive").innerHTML =
-      '<p class="empty">جاري تحميل الأرشيف...</p>';
+  // تسجيل الخروج
+  $("logoutBtn").addEventListener("click", async () => {
+    await db.auth.signOut();
 
-    const allowed = await verifyAdmin();
+    $("dashboard").classList.add("hidden");
+    $("loginSection").classList.remove("hidden");
+    $("logoutBtn").classList.add("hidden");
+    $("password").value = "";
 
-    if (!allowed) return;
+    clearNotice("loginNotice");
+  });
 
-    const { data, error } = await supabase
-      .from("royal_publications")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      $("archive").innerHTML =
-        '<p class="empty">تعذّر تحميل الأرشيف. تحقق من صلاحيات قاعدة البيانات.</p>';
-
-      showMessage(
-        "dashboardMessage",
-        "خطأ في تحميل الأرشيف: " + error.message,
-        "error"
-      );
-
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      $("archive").innerHTML =
-        '<p class="empty">لا توجد منشورات حتى الآن. يمكنك إضافة أول منشور من النموذج أعلاه.</p>';
-
-      return;
-    }
-
-    $("archive").innerHTML = data.map((item) => {
-      const type = item.publication_type === "speech"
-        ? "خطاب ملكي"
-        : "قرار ملكي";
-
-      const status = item.status === "published"
-        ? "منشور"
-        : "مسودة";
-
-      const date = item.created_at
-        ? new Date(item.created_at).toLocaleDateString("ar-TN")
-        : "";
-
-      const documentURL = safeURL(item.document_url);
-      const imageURL = safeURL(item.image_url);
-
-      return `
-        <article class="publication">
-          <span class="status">${escapeHTML(status)}</span>
-
-          <h3>${escapeHTML(item.title)}</h3>
-
-          <div class="meta">
-            النوع: ${escapeHTML(type)}
-            <br>
-            الرقم المرجعي: ${escapeHTML(item.reference_number || "غير محدد")}
-            <br>
-            تاريخ الإضافة: ${escapeHTML(date)}
-          </div>
-
-          ${
-            item.summary
-              ? `<p>${escapeHTML(item.summary)}</p>`
-              : ""
-          }
-
-          <details>
-            <summary>عرض النص الكامل</summary>
-            <p>${escapeHTML(item.content)}</p>
-          </details>
-
-          ${
-            documentURL
-              ? `<p><a href="${escapeHTML(documentURL)}" target="_blank" rel="noopener noreferrer">فتح الوثيقة</a></p>`
-              : ""
-          }
-
-          ${
-            imageURL
-              ? `<p><a href="${escapeHTML(imageURL)}" target="_blank" rel="noopener noreferrer">فتح الصورة</a></p>`
-              : ""
-          }
-
-          <button
-            class="delete"
-            type="button"
-            data-delete="${escapeHTML(item.id)}"
-          >حذف المنشور</button>
-        </article>
-      `;
-    }).join("");
-
-    $("archive").querySelectorAll("[data-delete]").forEach((button) => {
-      button.addEventListener("click", async () => {
-        const id = button.dataset.delete;
-
-        if (!confirm("هل أنت متأكد من حذف هذا المنشور؟")) {
-          return;
-        }
-
-        button.disabled = true;
-
-        try {
-          const allowed = await verifyAdmin();
-          if (!allowed) return;
-
-          const { error } = await supabase
-            .from("royal_publications")
-            .delete()
-            .eq("id", id);
-
-          if (error) throw error;
-
-          showMessage(
-            "dashboardMessage",
-            "تم حذف المنشور."
-          );
-
-          await loadArchive();
-        } catch (error) {
-          showMessage(
-            "dashboardMessage",
-            "تعذّر حذف المنشور: " + error.message,
-            "error"
-          );
-
-          button.disabled = false;
-        }
-      });
-    });
-  }
-
-  $("publicationForm").addEventListener("submit", async (event) => {
+  // إضافة قرار أو خطاب
+  $("publicationForm").addEventListener("submit", async event => {
     event.preventDefault();
 
-    clearMessage("formMessage");
+    if (publicationBusy) return;
 
-    if (busy) return;
-    busy = true;
+    publicationBusy = true;
+    $("savePubBtn").disabled = true;
+    $("savePubBtn").textContent = "جارٍ الحفظ...";
 
-    setBusy("saveButton", true, "جاري الحفظ...");
+    clearNotice("pubNotice");
 
     try {
-      const allowed = await verifyAdmin();
-
-      if (!allowed) {
-        throw new Error("يلزم تسجيل الدخول بحساب مسؤول.");
+      if (!(await verifyAdmin())) {
+        throw new Error("الجلسة منتهية أو لا تملك صلاحية النشر.");
       }
 
-      const status = $("publicationStatus").value;
-
-      const publication = {
-        title: $("title").value.trim(),
-        publication_type: $("publicationType").value,
-        reference_number: $("referenceNumber").value.trim() || null,
-        summary: $("summary").value.trim() || null,
-        content: $("content").value.trim(),
-        document_url: $("documentUrl").value.trim() || null,
-        image_url: $("imageUrl").value.trim() || null,
-        status,
-        published_at: status === "published"
-          ? new Date().toISOString()
-          : null
+      const payload = {
+        title: $("pubTitle").value.trim(),
+        publication_type: $("pubType").value,
+        reference_number: $("pubRef").value.trim() || null,
+        summary: $("pubSummary").value.trim() || null,
+        content: $("pubContent").value.trim(),
+        document_url: $("pubDoc").value.trim() || null,
+        image_url: $("pubImage").value.trim() || null,
+        status: $("pubStatus").value
       };
 
-      if (!publication.title || !publication.content) {
-        throw new Error("اكتب عنوان المنشور والنص الكامل.");
-      }
-
-      const { error } = await supabase
+      const { error } = await db
         .from("royal_publications")
-        .insert(publication);
+        .insert(payload);
 
       if (error) throw error;
 
       $("publicationForm").reset();
 
-      showMessage(
-        "formMessage",
-        status === "published"
-          ? "تم حفظ المنشور ونشره في قاعدة البيانات."
-          : "تم حفظ المنشور كمسودة."
+      notice(
+        "pubNotice",
+        "تم حفظ المنشور بنجاح.",
+        "success"
       );
 
-      await loadArchive();
+      await loadPublications();
 
     } catch (error) {
-      showMessage(
-        "formMessage",
-        "تعذّر حفظ المنشور: " + (error.message || "خطأ غير معروف"),
+      console.error(error);
+
+      notice(
+        "pubNotice",
+        "لم يتم الحفظ: " + (error.message || "خطأ غير معروف") +
+        ". تحقق من أعمدة الجدول وسياسات RLS.",
         "error"
       );
+
     } finally {
-      busy = false;
-      setBusy("saveButton", false, "حفظ المنشور");
+      publicationBusy = false;
+      $("savePubBtn").disabled = false;
+      $("savePubBtn").textContent = "حفظ المنشور";
     }
   });
 
-  $("refreshButton").addEventListener("click", async () => {
-    clearMessage("dashboardMessage");
+  // تحميل الأرشيف
+  async function loadPublications() {
+    $("archiveList").innerHTML =
+      '<div class="empty">جارٍ تحميل الأرشيف...</div>';
+
+    clearNotice("archiveNotice");
 
     try {
-      await loadArchive();
+      const { data, error } = await db
+        .from("royal_publications")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      publications = data || [];
+      renderPublications();
+
     } catch (error) {
-      showMessage(
-        "dashboardMessage",
-        "تعذّر تحديث الأرشيف: " + error.message,
-        "error"
-      );
-    }
-  });
+      console.error(error);
 
-  $("logoutButton").addEventListener("click", async () => {
-    const { error } = await supabase.auth.signOut();
+      $("archiveList").innerHTML = "";
 
-    if (error) {
-      showMessage(
-        "dashboardMessage",
-        "تعذّر تسجيل الخروج: " + error.message,
-        "error"
-      );
-      return;
-    }
-
-    $("loginForm").reset();
-    showLogin();
-
-    showMessage(
-      "loginMessage",
-      "تم تسجيل الخروج بنجاح."
-    );
-  });
-
-  async function startApp() {
-    try {
-      const allowed = await verifyAdmin();
-
-      if (allowed) {
-        await loadArchive();
-      }
-    } catch (error) {
-      showLogin();
-
-      showMessage(
-        "loginMessage",
-        "تعذّر الاتصال بقاعدة البيانات. تحقق من الاتصال بالإنترنت وإعدادات Supabase.",
+      notice(
+        "archiveNotice",
+        "تعذّر تحميل الأرشيف: " + (error.message || "خطأ غير معروف") +
+        ". تحقق من صلاحيات SELECT وسياسات RLS.",
         "error"
       );
     }
   }
 
-  startApp();
+  function renderPublications() {
+    const query = $("archiveSearch").value.trim().toLowerCase();
+    const filter = $("archiveFilter").value;
+
+    const rows = publications.filter(item => {
+      const text =
+        `${item.title || ""} ${item.reference_number || ""}`
+          .toLowerCase();
+
+      return text.includes(query) &&
+        (filter === "all" || item.publication_type === filter);
+    });
+
+    if (!rows.length) {
+      $("archiveList").innerHTML =
+        '<div class="empty">لا توجد منشورات مطابقة.</div>';
+      return;
+    }
+
+    $("archiveList").innerHTML = rows.map(item => `
+      <article class="item">
+        <div class="item-top">
+          <div>
+            <h3>${escapeHTML(item.title)}</h3>
+
+            <div class="meta">
+              <span>${escapeHTML(publicationTypeLabel(item.publication_type))}</span>
+              <span>الرقم: ${escapeHTML(item.reference_number || "—")}</span>
+              <span>${escapeHTML(formatDate(item.created_at))}</span>
+            </div>
+          </div>
+
+          <div class="actions">
+            <span class="badge">
+              ${escapeHTML(statusLabel(item.status))}
+            </span>
+
+            <button
+              class="btn danger"
+              type="button"
+              data-delete-publication="${escapeHTML(item.id)}">
+              حذف
+            </button>
+          </div>
+        </div>
+
+        ${item.summary ? `
+          <p class="bodytext">${escapeHTML(item.summary)}</p>
+        ` : ""}
+
+        <details>
+          <summary>عرض النص الكامل</summary>
+
+          <p class="bodytext">${escapeHTML(item.content)}</p>
+
+          ${item.document_url ? `
+            <p>
+              <a href="${escapeHTML(item.document_url)}"
+                 target="_blank" rel="noopener noreferrer">
+                فتح الوثيقة
+              </a>
+            </p>
+          ` : ""}
+
+          ${item.image_url ? `
+            <p>
+              <a href="${escapeHTML(item.image_url)}"
+                 target="_blank" rel="noopener noreferrer">
+                فتح الصورة
+              </a>
+            </p>
+          ` : ""}
+        </details>
+      </article>
+    `).join("");
+  }
+
+  $("archiveList").addEventListener("click", async event => {
+    const button = event.target.closest("[data-delete-publication]");
+
+    if (!button) return;
+
+    if (!confirm("هل تريد حذف هذا المنشور نهائيًا؟")) return;
+
+    button.disabled = true;
+
+    try {
+      if (!(await verifyAdmin())) {
+        throw new Error("لا توجد صلاحية مسؤول.");
+      }
+
+      const id = button.dataset.deletePublication;
+
+      const { error } = await db
+        .from("royal_publications")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+
+      await loadPublications();
+
+      notice("archiveNotice", "تم حذف المنشور.", "success");
+
+    } catch (error) {
+      notice(
+        "archiveNotice",
+        "تعذّر الحذف: " + (error.message || "خطأ غير معروف"),
+        "error"
+      );
+
+      button.disabled = false;
+    }
+  });
+
+  $("archiveSearch").addEventListener("input", renderPublications);
+  $("archiveFilter").addEventListener("change", renderPublications);
+  $("refreshArchiveBtn").addEventListener("click", loadPublications);
+
+  // تحميل مطالب المواطنين
+  async function loadApplications() {
+    $("applicationList").innerHTML =
+      '<div class="empty">جارٍ تحميل المطالب...</div>';
+
+    clearNotice("applicationNotice");
+
+    try {
+      if (!(await verifyAdmin())) {
+        throw new Error("لا توجد صلاحية مسؤول.");
+      }
+
+      const { data, error } = await db
+        .from("citizen_applications")
+        .select(
+          "id,reference_number,applicant_name,email,city,application_type,details,status,created_at"
+        )
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      applications = data || [];
+      renderApplications();
+
+    } catch (error) {
+      console.error(error);
+
+      $("applicationList").innerHTML = "";
+
+      notice(
+        "applicationNotice",
+        "تعذّر تحميل المطالب: " + (error.message || "خطأ غير معروف") +
+        ". تأكد من وجود الجدول ومنح المسؤول صلاحية SELECT عبر RLS.",
+        "error"
+      );
+    }
+  }
+
+  // عرض المطالب والبحث فيها
+  function renderApplications() {
+    const query = $("applicationSearch").value.trim().toLowerCase();
+    const filter = $("applicationFilter").value;
+
+    const rows = applications.filter(item => {
+      const text = [
+        item.reference_number,
+        item.applicant_name,
+        item.email,
+        item.city
+      ].join(" ").toLowerCase();
+
+      return text.includes(query) &&
+        (filter === "all" || item.status === filter);
+    });
+
+    if (!rows.length) {
+      $("applicationList").innerHTML =
+        '<div class="empty">لا توجد مطالب مطابقة.</div>';
+      return;
+    }
+
+    $("applicationList").innerHTML = rows.map(item => `
+      <article class="item">
+        <div class="item-top">
+          <div>
+            <h3>${escapeHTML(item.applicant_name || "مواطن بدون اسم")}</h3>
+
+            <div class="meta">
+              <span>المرجع: ${escapeHTML(item.reference_number || "—")}</span>
+              <span>${escapeHTML(item.email || "لا يوجد بريد")}</span>
+              <span>المدينة: ${escapeHTML(item.city || "—")}</span>
+              <span>النوع: ${escapeHTML(item.application_type || "عام")}</span>
+              <span>${escapeHTML(formatDate(item.created_at))}</span>
+            </div>
+          </div>
+
+          <span class="badge status-${escapeHTML(item.status)}">
+            ${escapeHTML(statusLabel(item.status))}
+          </span>
+        </div>
+
+        <div class="request-details">
+          ${escapeHTML(item.details || "لا توجد تفاصيل إضافية.")}
+        </div>
+
+        <div class="actions">
+          <label for="status-${escapeHTML(item.id)}">الحالة:</label>
+
+          <select
+            id="status-${escapeHTML(item.id)}"
+            data-app-status="${escapeHTML(item.id)}"
+            style="max-width:210px">
+
+            <option value="pending"
+              ${item.status === "pending" ? "selected" : ""}>
+              قيد الانتظار
+            </option>
+
+            <option value="under_review"
+              ${item.status === "under_review" ? "selected" : ""}>
+              قيد الدراسة
+            </option>
+
+            <option value="approved"
+              ${item.status === "approved" ? "selected" : ""}>
+              مقبول
+            </option>
+
+            <option value="rejected"
+              ${item.status === "rejected" ? "selected" : ""}>
+              مرفوض
+            </option>
+          </select>
+
+          <button
+            class="btn primary"
+            type="button"
+            data-save-app="${escapeHTML(item.id)}">
+            حفظ الحالة
+          </button>
+        </div>
+      </article>
+    `).join("");
+  }
+
+  // تحديث حالة مطلب مواطن
+  $("applicationList").addEventListener("click", async event => {
+    const button = event.target.closest("[data-save-app]");
+
+    if (!button) return;
+
+    const id = button.dataset.saveApp;
+
+    const select = Array.from(
+      $("applicationList").querySelectorAll("[data-app-status]")
+    ).find(element => element.dataset.appStatus === id);
+
+    if (!select) return;
+
+    const newStatus = select.value;
+
+    button.disabled = true;
+    const oldText = button.textContent;
+    button.textContent = "جارٍ الحفظ...";
+
+    try {
+      if (!(await verifyAdmin())) {
+        throw new Error("لا توجد صلاحية مسؤول.");
+      }
+
+      const { data, error } = await db
+        .from("citizen_applications")
+        .update({ status: newStatus })
+        .eq("id", id)
+        .select("id");
+
+      if (error) throw error;
+
+      if (!data || data.length === 0) {
+        throw new Error(
+          "لم تتغير الحالة. تحقق من سياسة UPDATE في Supabase."
+        );
+      }
+
+      notice(
+        "applicationNotice",
+        "تم تحديث حالة المطلب بنجاح.",
+        "success"
+      );
+
+      await loadApplications();
+
+    } catch (error) {
+      console.error(error);
+
+      notice(
+        "applicationNotice",
+        "تعذّر تحديث الحالة: " + (error.message || "خطأ غير معروف") +
+        ". تحقق من سياسة UPDATE في Supabase.",
+        "error"
+      );
+
+    } finally {
+      button.disabled = false;
+      button.textContent = oldText;
+    }
+  });
+
+  $("applicationSearch").addEventListener("input", renderApplications);
+  $("applicationFilter").addEventListener("change", renderApplications);
+  $("refreshApplicationsBtn").addEventListener("click", loadApplications);
+
+  // إذا انتهت الجلسة، نرجع إلى شاشة الدخول.
+  db.auth.onAuthStateChange((_event, session) => {
+    if (!session) {
+      $("dashboard").classList.add("hidden");
+      $("loginSection").classList.remove("hidden");
+      $("logoutBtn").classList.add("hidden");
+    }
+  });
+
+  // استرجاع الجلسة عند إعادة فتح الصفحة.
+  (async function init() {
+    const { data } = await db.auth.getSession();
+
+    if (data.session) {
+      await enterDashboard();
+    }
+  })();
+
+})();
 </script>
 
 </body>
