@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الإدارة الملكية | المملكة</title>
+
+<style>
+:root {
+  --gold: #d7b56d;
+  --dark: #102b23;
+  --darker: #091c17;
+  --paper: #f7f5ef;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Tahoma, Arial, sans-serif;
+  background: var(--paper);
+  color: #24332c;
+}
+
+header {
+  background: linear-gradient(135deg, var(--darker), var(--dark));
+  color: white;
+  padding: 25px 20px;
+  border-bottom: 4px solid var(--gold);
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: auto;
+}
+
+.brand {
+  color: var(--gold);
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+
+h1 {
+  font-size: 27px;
+  margin: 12px 0 8px;
+}
+
+header p {
+  color: #d8dfda;
+  line-height: 1.8;
+  margin-bottom: 0;
+}
+
+main {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 0 16px;
+}
+
+.notice {
+  padding: 15px;
+  border: 1px solid #e5d4a6;
+  background: #fffaf0;
+  border-radius: 8px;
+  line-height: 1.9;
+  margin-bottom: 25px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: var(--white);
+  padding: 23px;
+  border-radius: 10px;
+  border: 1px solid #e5e5df;
+  box-shadow: 0 5px 20px #102b230a;
+}
+
+.card h2 {
+  color: var(--dark);
+  font-size: 19px;
+  margin-top: 0;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  font-size: 14px;
+  margin: 15px 0 7px;
+}
+
+input, select, textarea {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d6dcd7;
+  border-radius: 6px;
+  background: white;
+  font-family: inherit;
+  font-size: 15px;
+}
+
+textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 6px;
+  padding: 12px 17px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.primary {
+  background: var(--dark);
+  color: white;
+  width: 100%;
+  margin-top: 18px;
+}
+
+.secondary {
+  background: #eee9dc;
+  color: var(--dark);
+  margin-top: 10px;
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.status {
+  margin-top: 15px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.muted {
+  color: #6d776f;
+  line-height: 1.8;
+  font-size: 13px;
+}
+
+#dashboard {
+  display: none;
+}
+
+.publication {
+  border: 1px solid #e2e5df;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 12px;
+}
+
+.publication h3 {
+  margin: 0 0 8px;
+}
+
+.badge {
+  display: inline-block;
+  background: #e9efe9;
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+footer {
+  background: var(--darker);
+  color: #d8dfda;
+  text-align: center;
+  padding: 24px 12px;
+  margin-top: 45px;
+  font-size: 12px;
+  line-height: 2;
+}
+
+@media (max-width: 500px) {
+  h1 { font-size: 23px; }
+  main { margin-top: 20px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">KINGDOM · ADMINISTRATION</div>
+    <h1>الإدارة الملكية</h1>
+    <p>لوحة إدارة القرارات والأوامر والخطابات والبرامج الملكية والحكومية.</p>
+  </div>
+</header>
+
+<main>
+  <div class="notice">
+    <strong>مرحبًا بك في الإدارة الملكية.</strong><br>
+    هذه واجهة الإدارة. يلزم ربطها بقاعدة البيانات وتفعيل الصلاحيات قبل نشر الوثائق.
+  </div>
+
+  <section class="grid" id="loginSection">
+    <div class="card">
+      <h2>🔐 تسجيل دخول المدير</h2>
+      <p class="muted">استعمل حساب المدير المسجّل في مشروع Supabase.</p>
+
+      <form id="loginForm">
+        <label for="email">البريد الإلكتروني</label>
+        <input id="email" type="email" required autocomplete="username"
+               placeholder="البريد الإلكتروني">
+
+        <label for="password">كلمة السر</label>
+        <input id="password" type="password" required
+               autocomplete="current-password" placeholder="كلمة السر">
+
+        <button class="primary" type="submit">تسجيل الدخول</button>
+      </form>
+
+      <div id="loginStatus" class="status" role="status"></div>
+    </div>
+
+    <div class="card">
+      <h2>📜 خدمات الإدارة</h2>
+      <p>إدارة الأوامر والقرارات الملكية.</p>
+      <p>نشر الخطابات والكلمات الرسمية.</p>
+      <p>تنظيم البرامج الملكية والحكومية.</p>
+      <p>أرشفة الوثائق وتسهيل البحث فيها.</p>
+      <p class="muted">ستُفعّل هذه الخدمات بعد ربط قاعدة البيانات وتأمين الملفات.</p>
+    </div>
+  </section>
+
+  <section id="dashboard">
+    <div class="grid">
+      <div class="card">
+        <h2>✍️ إضافة منشور</h2>
+
+        <form id="publicationForm">
+          <label for="title">عنوان المنشور</label>
+          <input id="title" required maxlength="250">
+
+          <label for="type">نوع المنشور</label>
+          <select id="type" required>
+            <option value="decision">قرار ملكي</option>
+            <option value="speech">خطاب ملكي</option>
+          </select>
+
+          <label for="reference">الرقم المرجعي</label>
+          <input id="reference" maxlength="100"
+                 placeholder="اختياري">
+
+          <label for="summary">ملخص المنشور</label>
+          <textarea id="summary" maxlength="2000"></textarea>
+
+          <label for="content">النص الكامل</label>
+          <textarea id="content" required></textarea>
+
+          <label for="status">حالة المنشور</label>
+          <select id="status">
+            <option value="draft">مسودة — غير منشور</option>
+            <option value="published">نشر للعموم</option>
+          </select>
+
+          <button class="primary" type="submit">حفظ المنشور</button>
+        </form>
+
+        <div id="formStatus" class="status" role="status"></div>
+      </div>
+
+      <div class="card">
+        <h2>📚 الأرشيف</h2>
+        <p class="muted">المنشورات المسجلة في قاعدة البيانات.</p>
+
+        <button class="primary" id="refreshButton" type="button">
+          تحديث القائمة
+        </button>
+
+        <div id="archive" aria-live="polite"></div>
+        <div id="archiveStatus" class="status" role="status"></div>
+      </div>
+    </div>
+
+    <button class="secondary" id="logoutButton" type="button">
+      تسجيل الخروج
+    </button>
+  </section>
+</main>
+
+<footer>
+  الإدارة الملكية · المملكة<br>
+  منصة لإدارة الوثائق والمنشورات والأرشيف.
+</footer>
+
+<script type="module">
+/*
+  ستتم إضافة إعدادات Supabase بعد نشر هذه الواجهة.
+  لا تضع كلمة السر أو مفاتيح الخدمة السرية في هذا الملف.
+*/
+const loginSection = document.getElementById("loginSection");
+const dashboard = document.getElementById("dashboard");
+
+document.getElementById("loginForm").addEventListener("submit", event => {
+  event.preventDefault();
+  document.getElementById("loginStatus").textContent =
+    "لم يتم ربط تسجيل الدخول بعد. الخطوة التالية هي إعداد اتصال Supabase الآمن.";
+});
+
+document.getElementById("publicationForm").addEventListener("submit", event => {
+  event.preventDefault();
+  document.getElementById("formStatus").textContent =
+    "لم يتم حفظ المنشور: يلزم ربط قاعدة البيانات أولًا.";
+});
+
+document.getElementById("refreshButton").addEventListener("click", () => {
+  document.getElementById("archiveStatus").textContent =
+    "الأرشيف سيظهر بعد ربط قاعدة البيانات.";
+});
+
+document.getElementById("logoutButton").addEventListener("click", () => {
+  dashboard.style.display = "none";
+  loginSection.style.display = "grid";
+});
+</script>
+
+</body>
+</html>
